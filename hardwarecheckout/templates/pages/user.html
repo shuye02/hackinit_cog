@@ -20,7 +20,15 @@
 {% endif %}
 
 <h3> Info </h3>
-<form method="post" class="ui form">
+
+<script type="text/javascript">
+    function DoSubmit(){
+        document.info.phone.value = '+86' + document.info.phone.value;
+        return true;
+    }
+</script>
+
+<form method="post" class="ui form" name="info">
     <div class="four fields">
         <div class="three wide field">
             <input type="text" name="name" placeholder="Name" value="{{ target.name }}">
@@ -32,14 +40,14 @@
             <input type="text" name="phone" placeholder="Phone Number" value="{{ target.phone }}">
         </div>
         <div class="four wide field">
-            <button class="ui primary update-user button" data-id="{{ target.id }}" type="submit">
-               Update 
+            <button class="ui primary update-user button" data-id="{{ target.id }}" type="submit" onclick="DoSubmit()">
+               Update
             </button>
         </div>
     </div>
     <div class="ui error message"></div>
 </form>
- 
+
 {% if target.items %}
     <h3> Checked out </h3>
     {{ items_list(target.items, admin=user.is_admin) }}
