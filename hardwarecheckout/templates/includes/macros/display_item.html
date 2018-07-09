@@ -90,7 +90,7 @@
         <form class="ui form request-form" method="post">
             <div class="two fields">
                 <div class="twelve wide field">
-                    <label> Lottery Proposal </label>
+                    <label> 抽签计划 </label>
                     <input type="text" name="proposal"
                         {% if config['LOTTERY_CHAR_LIMIT'] %}
                             maxlength="{{ config['LOTTERY_CHAR_LIMIT'] }}"
@@ -99,7 +99,7 @@
                 </div>
                 <div class="four wide field" style="margin-left: auto;">
                     {% if config['LOTTERY_MULTIPLE_SUBMISSIONS'] %}
-                        <label> Quantity </label>
+                        <label> 数量 </label>
                         <div class="ui action input">
                             <input type="number" name="quantity" value="1" min="1" max="5">
                             <button type="submit" data-item-id="{{ item.id }}"
