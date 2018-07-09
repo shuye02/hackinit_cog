@@ -23,8 +23,12 @@
 
 <script type="text/javascript">
     function DoSubmit(){
-        document.info.phone.value = '+86' + document.info.phone.value;
-        return true;
+        if (document.info.phone.value.slice(0,3) == '+86') {
+            return true;
+        } else {
+            document.info.phone.value = '+86' + document.info.phone.value;
+            return true;
+        }
     }
 </script>
 
