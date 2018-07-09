@@ -16,3 +16,4 @@ __pycache__
 .cache/
 Cog
 .vscode/
+venv
