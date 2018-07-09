@@ -40,17 +40,17 @@
                     <p>
                         <i class="user icon"></i> ID:
                         {% if u.have_their_id %}
-                            Collected
+                            已获取
                         {% else %}
-                            Not Collected
+                            未获取
                         {% endif %}
                     </p>
                     <p>
                         {% if u.items %}
-                            <h4> Items Checked Out </h4>
+                            <h4> 已检出项目 </h4>
                             {{ items_list(u.items, table_id = u.id) }}
                         {% else %}
-                            User has not checked out any items. 
+                            该用户还没有检出任何项目。
                         {% endif %}
                     </p>
                 </div>
@@ -59,8 +59,7 @@
     {% endfor %}
 </div>
 
-{{ confirmation("return-notice", "Be sure to return ID to user!", "They've returned their last item",
+{{ confirmation("return-notice", "请确保已经将ID归还参赛者", "他们已经归还了最后一个项目。",
 None, None, "return-notice-btn") }}
 
 {%- endmacro %}
-

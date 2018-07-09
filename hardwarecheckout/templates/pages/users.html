@@ -2,7 +2,7 @@
 
 {% from 'includes/macros/display_users.html' import display_users %}
 
-{% block title %} Users {% endblock %}
+{% block title %} 用户 {% endblock %}
 
 {% block panel %}
     {{ display_users(users) }}
@@ -12,4 +12,3 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='scripts/users.js') }}"></script>
 {% endblock %}
-

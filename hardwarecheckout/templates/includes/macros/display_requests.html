@@ -7,35 +7,35 @@
     <thead class="ui mobile hidden header">
         <tr>
             {% if show_item_name %}
-                <td class="five wide"> Item </td>
+                <td class="five wide"> 项目 </td>
             {% elif show_proposal %}
-                <td class="five wide"> Proposal </td>
+                <td class="five wide"> 请求/计划 </td>
             {% endif %}
             {% if admin %}
                 {% if time %}
-                <td class="two wide"> Time </td>
+                <td class="two wide"> 时间 </td>
                 {% endif %}
-                <td class="four wide"> User </td>
+                <td class="four wide"> 用户 </td>
             {% elif time %}
-                <td class="six wide"> Time </td>
+                <td class="six wide"> 时间 </td>
             {% endif %}
-            <td class="two wide"> Status </td>
+            <td class="two wide"> 状态 </td>
         </tr>
     </thead>
     {% endif %}
     <tbody>
         {% for request in requests | sort(attribute="timestamp") | reverse %}
-            <tr> 
+            <tr>
                 {% if show_item_name %}
                 <td>
                     {% for item in request.items %}
-                        <span> 
+                        <span>
                             {% if admin %}
-                            <a href="{{ url_for('inventory_display', id=item.entry.id) }}"> 
-                                {{ item.entry.name }} 
-                            </a> 
+                            <a href="{{ url_for('inventory_display', id=item.entry.id) }}">
+                                {{ item.entry.name }}
+                            </a>
                             {% else %}
-                                {{ item.entry.name }} 
+                                {{ item.entry.name }}
                             {% endif %}
                         </span>
                     {% endfor %}
@@ -57,34 +57,34 @@
                 {% if admin %}
                 <td>
                     <a href="{{ url_for('user_items', id=request.user.id) }}">
-                        <span class="ui label"> <i class="ui user icon"></i> {{ request.user.email }} </span> 
+                        <span class="ui label"> <i class="ui user icon"></i> {{ request.user.email }} </span>
                     </a>
                     {% if request.requires_id %}
                         {% if request.user.have_their_id %}
-                            <span class="ui green basic label"><i class="ui icon checkmark"></i> Have ID. </span>
+                            <span class="ui green basic label"><i class="ui icon checkmark"></i> 已经有了ID。 </span>
                         {% else %}
-                            <span class="ui red basic label"><i class="ui icon warning sign"></i> Need ID! </span>
+                            <span class="ui red basic label"><i class="ui icon warning sign"></i> 需要您的ID！ </span>
                         {% endif %}
                     {% else %}
-                        <span class="ui basic label"> No ID required.</span>
+                        <span class="ui basic label">不需要ID。</span>
                     {% endif %}
                 </td>
                 {% endif %}
                 <td>
-                    {% if request.status == RequestStatus.SUBMITTED %} 
-                        <span class="ui label">Submitted</span>
+                    {% if request.status == RequestStatus.SUBMITTED %}
+                        <span class="ui label">已递交</span>
                     {% endif %}
-                    {% if request.status == RequestStatus.APPROVED %} 
-                        <span class="ui label green">Approved</span>
+                    {% if request.status == RequestStatus.APPROVED %}
+                        <span class="ui label green">已批准</span>
                     {% endif %}
-                    {% if request.status == RequestStatus.FULFILLED %} 
-                        <span class="ui label green">Fulfilled</span>
+                    {% if request.status == RequestStatus.FULFILLED %}
+                        <span class="ui label green">已提供</span>
                     {% endif %}
-                    {% if request.status == RequestStatus.DENIED %} 
-                        <span class="ui label red">Denied</span>
+                    {% if request.status == RequestStatus.DENIED %}
+                        <span class="ui label red">已拒绝</span>
                     {% endif %}
-                    {% if request.status == RequestStatus.CANCELLED %} 
-                        <span class="ui label red">Cancelled</span>
+                    {% if request.status == RequestStatus.CANCELLED %}
+                        <span class="ui label red">已取消</span>
                     {% endif %}
                 </td>
                 <td class="ui right aligned">
@@ -92,35 +92,35 @@
                         {% if admin %}
                             {% if request.status == RequestStatus.SUBMITTED %}
                                 <a class="ui icon request-action" href="#" data-action="approve request" data-id="{{request.id}}">
-                                    <i class="ui checkmark icon"></i>Approve
+                                    <i class="ui checkmark icon"></i>批准
                                 </a>
                                 <a class="ui icon request-action" href="#" data-action="deny request" data-id="{{ request.id }}">
-                                    <i class="ui remove icon"></i>Deny
+                                    <i class="ui remove icon"></i>拒绝
                                 </a>
                             {% endif %}
                             {% if request.status == RequestStatus.APPROVED %}
-                                <a                                 
-                                    {% if request.user.have_their_id %} 
-                                        class="ui icon request-action" 
-                                        href="#" data-action="fulfill request" 
-                                        data-id="{{ request.id}}" 
-                                    {% else %} 
-                                        class="ui icon" 
-                                        href="#" 
+                                <a
+                                    {% if request.user.have_their_id %}
+                                        class="ui icon request-action"
+                                        href="#" data-action="fulfill request"
+                                        data-id="{{ request.id}}"
+                                    {% else %}
+                                        class="ui icon"
+                                        href="#"
                                         onclick="$('.id-confirmation[data-id=\'{{request.id}}\']').modal('show');"
                                     {% endif %} >
-                                    <i class="ui checkmark icon"></i>Fulfill</a>
-                                    {{ confirmation("id-confirmation", 
-                                        "Be sure to collect a valid of form of ID from this hacker!",
-                                        None, "fulfill request", request.id, "request-action") }}
+                                    <i class="ui checkmark icon"></i>提供</a>
+                                    {{ confirmation("id-confirmation",
+                                        "请确保已经获得参赛者的ID",
+                                        None, "满足请求", request.id, "request-action") }}
                                 <a class="ui icon request-action" href="#" data-action="cancel request" data-id="{{ request.id }}">
-                                    <i class="ui remove icon"></i>Cancel
+                                    <i class="ui remove icon"></i>取消
                                 </a>
                             {% endif %}
                         {% else %}
                             {% if request.status != RequestStatus.FULFILLED %}
                                 <a class="ui icon request-action" href="#" data-action="cancel request" data-id="{{ request.id }}">
-                                    <i class="ui remove icon"></i>Cancel
+                                    <i class="ui remove icon"></i>取消
                                 </a>
                             {% endif %}
                         {% endif %}
@@ -129,10 +129,10 @@
             </tr>
         {% else %}
             {% if admin %}
-                <div> No requests! </div>
+                <div>没有申请 </div>
             {% else %}
-                <div> You haven't submitted any requests! </div>
-            {% endif %} 
+                <div>您还没有提交申请。 </div>
+            {% endif %}
         {% endfor %}
   </tbody>
 </table>

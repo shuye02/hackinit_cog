@@ -1,31 +1,31 @@
 {% macro items_list(items, table_id=1, editable=True, admin=False) -%}
-<table class="ui compact table" data-table-id="{{ table_id }}"> 
+<table class="ui compact table" data-table-id="{{ table_id }}">
 {% for item in items %}
     <tr>
         <td>
             {% if admin %}
                 <a href="{{ url_for('inventory_display', id=item.entry.id) }}"
                     style="color:black;">
-                    {{ item.item_id }} 
+                    {{ item.item_id }}
                 </a>
             {% else %}
-                {{ item.item_id }} 
+                {{ item.item_id }}
             {% endif %}
         </td>
         {% if item.user %}
             <td>{{ item.user.name }} </td>
         {% else %}
-            <td>Available!</td>
+            <td>有货!</td>
         {% endif %}
         <td>
             {% if admin %}
                 {% if item.user %}
-                    <a class="ui icon item-action" 
-                    href="#" data-action="return item" 
+                    <a class="ui icon item-action"
+                    href="#" data-action="return item"
                     data-id="{{item.id}}" data-table-id="{{table_id}}">
                     Return</a>
                 {% else %}
-                    <a class="ui icon item-action" 
+                    <a class="ui icon item-action"
                     href="#" data-action="delete subitem"
                     data-id="{{item.id}}" data-table-id="{{table_id}}">
                     Delete</a>

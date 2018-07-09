@@ -1,5 +1,5 @@
 {% extends "includes/nav.html" %}
-{% block title %} Inventory {% endblock %}
+{% block title %} 仓库 {% endblock %}
 {% block panel %}
 
 {% from 'includes/macros/display_item.html' import display_item %}
@@ -8,22 +8,22 @@
 
 {% if user.is_admin %}
 <div class="ui secondary menu">
-    <a class="ui icon item" href="#" id="add-inventory"> <i id="add-inventory" class="plus icon"></i> &nbsp; Add Item</a>
-    <a class="ui icon item" href="#" id="autoadd-inventory"><i class="upload icon"></i> &nbsp; Import Google Sheet</a>
-    
+    <a class="ui icon item" href="#" id="add-inventory"> <i id="add-inventory" class="plus icon"></i> &nbsp;添加项目</a>
+    <a class="ui icon item" href="#" id="autoadd-inventory"><i class="upload icon"></i> &nbsp;从Google表格导入</a>
+
     <div id="add-form" class="ui modal">
         {{ item_form("Add Item", url_for('inventory_add')) }}
     </div>
     <div id="auto-add-form" class="ui modal">
-        <div class="header"> Import from Spreadsheet </div>
+        <div class="header"> 从Excel导入 </div>
         <div class="content">
             <form class="ui form" method="post">
                 <div class="field">
-                    <input type="text" name="url" placeholder="url"> 
+                    <input type="text" name="url" placeholder="url">
                 </div>
-                <button class="ui primary import-form primary button" type="submit">Import</button>
-                <div class="ui error message"></div> 
-            </form> 
+                <button class="ui primary import-form primary button" type="submit">导入</button>
+                <div class="ui error message"></div>
+            </form>
         </div>
     </div>
 </div>
@@ -31,14 +31,14 @@
 
 {% macro accordion_list(items, id) -%}
     <div class="ui text menu">
-    <div class="header item"> <h4> Categories </h4> </div>
-    <a accordion="{{ id }}" mode="expand" class="ui icon item expand-accordion" href="#"> <i class="plus icon"></i> &nbsp; Expand All</a>
+    <div class="header item"> <h4> 分类 </h4> </div>
+    <a accordion="{{ id }}" mode="expand" class="ui icon item expand-accordion" href="#"> <i class="plus icon"></i> &nbsp; 展开全部</a>
     </div>
     <div class="ui accordion" id="{{ id }}" size="{{ items | length }}">
-    {% for category in items | groupby('category') %} 
+    {% for category in items | groupby('category') %}
         <div class="title">
             <i class="dropdown icon"></i>
-            {{ category.grouper }} 
+            {{ category.grouper }}
         </div>
         <div class="content">
             <div class="ui stackable grid">
@@ -62,14 +62,14 @@
             {% endif %}
 
             {% if checkout_items %}
-                <h2>Checkout Required</h2>
+                <h2>需要检出</h2>
                 <span> {{ config['CHECKOUT_TEXT'] }} </span>
 
                 {{ accordion_list(checkout_items, "checkout_accordion") }}
             {% endif %}
 
             {% if free_items %}
-                <h2>No Checkout Required</h2>
+                <h2>不需要检出</h2>
                 <span> {{ config['FREE_TEXT'] }} </span>
 
                 {{ accordion_list(free_items, "free_accordion") }}
@@ -77,7 +77,7 @@
         </div>
         <div class="five wide column">
             <div class="ui sticky">
-            <h2>My Requests</h2>
+            <h2>我的申请</h2>
             <div id="my_requests">
                 {{ display_requests(requests, RequestStatus, admin=False, time=False) }}
             </div>

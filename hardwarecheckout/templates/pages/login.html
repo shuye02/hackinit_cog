@@ -1,24 +1,24 @@
 {% extends "includes/wrapper.html" %}
-{% block title %} Login {% endblock %}
+{% block title %} 登录 {% endblock %}
 
 {% block content %}
-<div class="ui middle aligned center aligned grid"> 
+<div class="ui middle aligned center aligned grid">
     <div id="login-wrapper" class="ui segment column">
         <h2 class="ui header"> {{ config["HACKATHON_NAME"] }} Hardware </h2>
-        <span> Please login using your <a href="{{ config["QUILL_URL"] }}">{{ config["QUILL_URL_READABLE"] }}</a> credentials </span>
+        <span>请用您的 <a href="{{ config["QUILL_URL"] }}">{{ config["QUILL_URL_READABLE"] }}</a> 登录 </span>
         <form id="login-form" class="ui form" action='/login' method='POST'>
             <div class="field">
-                <label>Email</label> 
+                <label>电子邮件</label>
                 <input type="text" name="email" placeholder="alyssap@hacker.org" autofocus>
             </div>
             <div class="field">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="**********"> 
+                <label>密码</label>
+                <input type="password" name="password" placeholder="**********">
             </div>
             <input class="ui fluid primary submit button" type="submit" value="Login">
         </form>
         {% if error %}
-            <div class="ui error message">Login Errors:
+            <div class="ui error message">登录错误：
                 {% for item in error %}
                 <div>{{item}}</div>
                 {% endfor %}
@@ -27,4 +27,3 @@
     </div>
 </div>
 {% endblock %}
-

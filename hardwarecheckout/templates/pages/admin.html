@@ -1,16 +1,16 @@
 {% extends "includes/nav.html" %}
-{% block title %} Admin {% endblock %}
+{% block title %} 管理 {% endblock %}
 
 {% from 'includes/macros/display_requests.html' import display_requests %}
 
 {% block panel %}
 
-<h2> Approved Requests </h2>
+<h2> 批准的请求 </h2>
 <div id="approved_requests">
     {{ display_requests(approved_requests, RequestStatus, user.is_admin) }}
 </div>
 
-<h2> Pending Requests </h2>
+<h2> 正在等待的请求 </h2>
 <div id="submitted_requests">
     {{ display_requests(submitted_requests, RequestStatus, user.is_admin) }}
 </div>
@@ -32,19 +32,19 @@
             <td>
                 <div data-item-id="{{ item.id }}">
                     <h3> {{ item.name }} </h3>
-                    Quantity: 
+                    数量:
                     <span class="item-quantity">
                         {{ item.quantity }}
-                    </span>, 
-                    Proposals: 
+                    </span>,
+                    申请目的/计划:
                     <span class="submitted-quantity">
                         {{ item.submitted_request_quantity }}
                     </span>
-                    <a href="{{ url_for('inventory_display', id=item.id) }}"> (view) </a> 
+                    <a href="{{ url_for('inventory_display', id=item.id) }}"> (view) </a>
                 </div>
             </td>
             <td class="ui right aligned">
-                <div class="ui primary run-lottery button" 
+                <div class="ui primary run-lottery button"
                         data-action="run lottery" data-id="{{ item.id }}">Run Lottery</div>
             </td>
         </tr>
