@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 ### App config ###
@@ -71,10 +72,10 @@ DISPLAY_CHECKOUT_QUANTITY = True
 LOTTERY_MULTIPLE_SUBMISSIONS = False
 
 # The info text underneath the 'Lottery Required' section
-LOTTERY_TEXT = """由于这些物品数量有限，需要通过抽签获取。请填写一份简要的计划，描述你在项目中使用这些物品的想法，我们将在Hackathon开始30分钟后随机通过尽可能多的请求。"""
+LOTTERY_TEXT = u"""由于这些物品数量有限，需要通过抽签获取。请填写一份简要的计划，描述你在项目中使用这些物品的想法，我们将在Hackathon开始30分钟后随机通过尽可能多的请求。"""
 
 # The info text underneath the 'Checkout Required' section
-CHECKOUT_TEXT = """点击以请求这些物品。你的请求将在物品可用时被通过。在物品被归还之前，我们将要求通过某种ID来记录物品状态。"""
+CHECKOUT_TEXT = u"""点击以请求这些物品。你的请求将在物品可用时被通过。在物品被归还之前，我们将要求通过某种ID来记录物品状态。"""
 
 # The info text underneath the 'No Checkout Required' section
-FREE_TEXT = """你可以直接到Hardware Desk请求以下物品！"""
+FREE_TEXT = u"""你可以直接到Hardware Desk请求以下物品！"""
