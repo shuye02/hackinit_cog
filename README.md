@@ -1,80 +1,124 @@
 # Cog
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/techx/cog)
+**This project is forked from [techx/cog](https://github.com/techx/cog), which is a hardware checkout system for hackathons.**  
 
-Cog is a hardware checkout system for hackathons, originally written for use
-at HackMIT and MakeMIT.
+It is written in Python 2, based on the framework of [Python Flask](http://flask.pocoo.org/) and enabled by [Gunicorn](http://gunicorn.org/) as a WSGI HTTP Server
 
-![Cog](/media/cog.png?raw=true)
+This README.md is written by [shuye02](https://www.github.com/shuye02).  
+You can go to [here](https://github.com/techx/cog/blob/master/README.md) for the original README.md of this project.
 
 ## Features
 
-### Inventory Management
-Add inventory items individually or in bulk from a spreadsheet, providing
-links and descriptions to give hackers resources for getting started. Items
-can even be individually named and tracked to make sure nothing goes missing.
+You can refer to the [original README.md](https://github.com/techx/cog/blob/master/README.md) from the [original project](https://github.com/techx/cog/).
 
-### Flexible Request System
-Tweak Cog to fit the logistical needs of your event, with options to manage
-lotteried items, items that require checkout, or simply a grab-and-go style
-inventory.
+## Deployment
 
-### Keep Track of Users
-Easily determine which hackers have which items, and get in touch with
-hackers via phone or email. You can additionally track whether or not you've
-collected collateral (such as an ID) from each hacker.
+#### Dependencies list
 
-### Real-time Admin Panel
-View, approve, and fulfill item requests in real-time as they come in. As
-soon as an organizer approves a request, hackers can see that their item is
-ready to be picked up.
+- python2
+- python2-pip
+- python2-virtualenv (optional, but *recommended*)
+- PostgreSQL
+- some other python libraries (refer to [requirements.txt](/requirements.txt))
 
-### Quill-Integrated Login
-Users login using credentials from an associated
-[Quill](https://github.com/techx/quill) instance, forgoing the need to create
-an additional account.
+#### Installing dependencies
 
-## Deployment & Configuration
-The easiest way to deploy Cog is to smash this Deploy to Heroku button right
-here:
+1. Install python2, python2-pip  
+ `Depends on your Linux distro, please refer to your distro wiki`
+2. Install python2-virtualenv  
+ `pip install virtualenv`
+3. Setup python 2 virtual environment (optional, but *recommended*)  
+ `virtualenv venv`
+4. Source your virtual environment   
+ `source venv/bin/activate`
+5. Install dependent Python libraries   
+ `pip install -r requirements.txt`
+6. Install PostgreSQL and start it  
+  You can refer to the [Arch Linux wiki](https://wiki.archlinux.org/index.php/PostgreSQL#Installing_PostgreSQL) for the **Installation** and **Intial Configuration** of PostgreSQL
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/techx/cog)
+##### An example of PostgreSQL Initial Configuration
+```sh
+# Switch to PostgreSQL admin account
+$ sudo -u postgres -i
 
-If you're interested in deploying on other infrastructure, that should be
-doable as well. Cog is written in Python 2, and all dependencies can easily
-be installed using Pip via `requirements.txt`. Cog uses PostgreSQL as a
-database. Deployments of Cog generally use Gunicorn as a web server
-(alongside gevent or eventlet for handling websockets). The exception to this
-is Cog's default Heroku configuration which uses the built in
-[Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/) web server
-due to performance issues using Gunicorn on Heroku.
+# Add your username
+[postgres]$ createuser --interactive
+[postgres]$ exit
 
-A myriad of configuration options are available to be tweaked in
-[`config.py`](hardwarecheckout/config.py). Alternatively, all values set in
-this file can be set as environment variables of the same name - environment
-variable values will take precedence over the value specified in `config.py`.
-Sensible defaults are in place for all of the event logistical settings, but
-we recommend playing around with them a bit. At the bare minimum you
-should change the `HACKATHON_NAME` and set your `QUILL` and `SECRET` env
-variables to match the associated Quill instance.
+# Create your database
+$ createdb myDatabaseName -U username
+# the [-U username] parameter can be omitted if the database user has the same name as your Linux user
+```
 
-We strongly recommend deploying Cog and experimenting with/testing your
-desired configuration options **in advance** of your event to ensure it
-behaves in a manner consistent with the logistical organization of your
-event.
+> **Note**:  
+  The database username is recommended to be your Linux username, since PostgreSQL uses a [peer authentication](https://www.postgresql.org/docs/current/static/auth-methods.html#AUTH-PEER) technique to map between Linux and database usernames.  
+  So, if you create a PostgreSQL user with the same name as your Linux username, it allows you to access the PostgreSQL database shell without having to specify a user to login (which makes it quite convenient).
 
-### Adding Hardware via Google Sheets
+And you may want to check whether your database are accessible or not.
+```sh
+$ psql -d myDatabaseName
+=> \?
+=> \q (or CTRL+d)
+```
+
+#### Configuration
+
+##### Customize for your own hackathon
+
+You can go to [config.py](/hardwarecheckout/config.py) to edit the following settings:
+* Your Hackathon name (*default to "Hack.init()"*)
+* Toggle Submission Settings
+  * Proposal for lottery items
+  * Multiple submissions for the same item
+  * etc.
+* Toggle Item Display
+* Info texts shown at the index page
+
+In addition, you can change the default [favicon.png](/hardwarecheckout/static/favicon.png) of your website and the [default picture](/hardwarecheckout/static/images/default.png) for your hardware items.
+
+> **Note**:  
+  You may want to run the following commands in a [Linux Screen terminal](https://www.gnu.org/software/screen/manual/screen.html).  
+  Especially when you are running cog in a vps, so that you can use `screen -r` command to retrieve the terminal from different login sessions.
+
+##### Environment Variables
+
+You **need** to set the following environment variables before getting your cog running
+* `DATABASE_URL`: the PostgreSQL database URL  
+  It should be in the form of `postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`.  
+  *An example `DATABASE_URL` may look like `postgres://username@localhost/cog`*
+* `QUILL`: the URL to your [Quill](https://github.com/techx/quill) instance for auth.  
+  *An example `QUILL` may look like `http://localhost:3000/`*
+* `SECRET`: it needs to be exactly the **same** JWT secret set in your QUILL configurations.
+
+#### Running
+
+Run `make run`.  
+The site is now listening at `0.0.0.0:8000`  
+> **Note**:  
+  You can change the listening address and port in [Makefile](/Makefile)
+  For example, you may want to listen only 127.0.0.1 and have nginx forward to this port.
+
+## Directory Architectures
+*TO-DO*
+
+## Customizations
+*This part is cited directly from the [original README.md](https://github.com/techx/cog/blob/master/README.md) of the original project.*
+
+#### Adding Hardware via [Google Sheets](https://www.google.com/sheets/about/)
+
 While you can add individual items one-by-one, we recommend creating a
 spreadsheet with all your items and importing this into Cog in one go.
 Currently, the only supported way to do this is via Google Sheets. An example
 Cog inventory sheet can be found
 [here](https://docs.google.com/spreadsheets/d/1ZCHa_F3i0vyoZtjJNyNhBg-flRBs-DUIT1GtKC26P14/edit#gid=0).
 
-To import from a Google Sheet, simply turn on view-only sharing and paste the
-main URL (not the sharing URL) into Cog after clicking 'Import Google Sheet'
-on the main inventory page.
+To import from a Google Sheet, simply turn on view-only sharing and paste the main URL (not the sharing URL) into Cog after clicking 'Import Google Sheet' on the main inventory page.
 
-### Customizing Branding
+> **Note**:  
+  You may need to set up a proxy to have access to Google Sheets depending on your network environment.
+
+#### Customizing Branding
+
 Cog uses the [Semantic UI](https://semantic-ui.com/) framework for styling.
 Branding can easily be customized using Semantic UI
 [themes](https://semantic-ui.com/usage/theming.html).
@@ -83,27 +127,3 @@ While Cog mostly uses default Semantic UI styling, a minimal amount of custom
 CSS lives in `hardwarecheckout/static/sass/app.scss`. In order to rebuild the
 CSS when the Sass is changed, install [Sass](https://sass-lang.com/) and run
 `sass --watch sass:css` in the `/static` directory.
-
-*If you end up using Cog for your event, please take a moment to add yourself to our 
-[users list](https://github.com/techx/cog/wiki/Cog-Users)!*
-
-## Development
-Interested in hacking on Cog? Check out the [development guide](DEVELOPMENT.md) 
-for some steps to get you started.
-
-## Contributing
-Hacking on Cog go well? Contribute back to upstream! We love outside
-contributions - have a look at our [contributing guide](CONTRIBUTING.md) for
-information on how you can get involved.
-
-## Acknowledgements
-Thanks to the following folks for their contributions to Cog pre-open
-sourcing: 
-- [Ethan Weber](https://github.com/ethanweber) and [Albert
-Yue](https://github.com/albert-yue) of [MakeMIT](https://makemit.org) 
-- [Shreyas Kapur](https://github.com/revalo) of [HackMIT](https://hackmit.org)
-- [Andrew Zhang](https://github.com/zhangcandrew) of [SwampHacks](http://swamphacks.com)
-
-## License
-Copyright 2017-2018 [Noah Moroze](mailto:me@noahmoroze.com). Released under
-AGPLv3. See [LICENSE.md](LICENSE.md) for a copy of the full license text. 
