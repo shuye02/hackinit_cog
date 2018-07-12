@@ -26,14 +26,15 @@ You can refer to the [original README.md](https://github.com/techx/cog/blob/mast
 1. Install python2, python2-pip  
  `Depends on your Linux distro, please refer to your distro wiki`
 2. Install python2-virtualenv  
- `pip install virtualenv`
+ `$ pip install virtualenv`
 3. Setup python 2 virtual environment (optional, but *recommended*)  
- `virtualenv venv`
+ `$ virtualenv venv`
 4. Source your virtual environment   
- `source venv/bin/activate`
+ `$ source venv/bin/activate`
 5. Install dependent Python libraries   
- `pip install -r requirements.txt`
-6. Install PostgreSQL and start it  
+ `(venv) $ pip install -r requirements.txt`
+6. You can then leave your virtual env by typing `deactivate`
+7. Install PostgreSQL and start it  
   You can refer to the [Arch Linux wiki](https://wiki.archlinux.org/index.php/PostgreSQL#Installing_PostgreSQL) for the **Installation** and **Intial Configuration** of PostgreSQL
 
 ##### An example of PostgreSQL Initial Configuration
@@ -77,7 +78,8 @@ You can go to [config.py](/hardwarecheckout/config.py) to edit the following set
 In addition, you can change the default [favicon.png](/hardwarecheckout/static/favicon.png) of your website and the [default picture](/hardwarecheckout/static/images/default.png) for your hardware items.
 
 > **Note**:  
-  You may want to run the following commands in a [Linux Screen terminal](https://www.gnu.org/software/screen/manual/screen.html).  
+  If you have installed the dependent python libraries in your virtual environment, you need to source the virtual environment before running the following commands.  
+  And you may want to run the following commands in a [Linux Screen terminal](https://www.gnu.org/software/screen/manual/screen.html).  
   Especially when you are running cog in a vps, so that you can use `screen -r` command to retrieve the terminal from different login sessions.
 
 ##### Environment Variables
