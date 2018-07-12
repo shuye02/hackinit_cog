@@ -86,7 +86,7 @@ In addition, you can change the default [favicon.png](/hardwarecheckout/static/f
 
 You **need** to set the following environment variables before getting your cog running
 * `DATABASE_URL`: the PostgreSQL database URL  
-  It should be in the form of `postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`.  
+  It should be in the form of `postgres://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`.  
   *An example `DATABASE_URL` may look like `postgres://username@localhost/cog`*
 * `QUILL`: the URL to your [Quill](https://github.com/techx/quill) instance for auth.  
   *An example `QUILL` may look like `http://localhost:3000/`*
@@ -94,11 +94,14 @@ You **need** to set the following environment variables before getting your cog 
 
 #### Running
 
-Run `make run`.  
-The site is now listening at `0.0.0.0:8000`  
+* Run `python initialize.py`.  
+  This initializes the database — run it if you make any changes to the models and
+  are fine with overwriting data.
+* Run `make run`.  
+  The site is now listening at `0.0.0.0:8000`  
 > **Note**:  
-  You can change the listening address and port in [Makefile](/Makefile)
-  For example, you may want to listen only 127.0.0.1 and have nginx forward to this port.
+  You can change the listening address and port in [Makefile](/Makefile)  
+  For example, you may want to listen only `127.0.0.1:8000` and have nginx forward to this port.
 
 ## Directory Architectures
 *TO-DO*
