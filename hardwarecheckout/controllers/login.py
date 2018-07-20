@@ -33,15 +33,30 @@ def login_handler():
     """Log user in"""
     form = LoginForm(request.form)
     if form.validate():
-        url = urljoin(config.QUILL_URL, '/auth/login')
-        r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
-        try:
-            r = json.loads(r.text)
-        except ValueError as e:
-            return render_template('pages/login.html', error=[str(e)])
+        if request.form['hackathon'] == 'init':
+            url = urljoin(config.QUILL_URL, '/auth/login')
+            r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
+            try:
+                r = json.loads(r.text)
+            except ValueError as e:
+                return render_template('pages/login.html', error=[str(e)])
 
-        if 'message' in r:
-            # User not in QUILL1
+            if 'message' in r:
+                return render_template('pages/login.html', error=[r['message']])
+
+            quill_id = verify_token(r['token'])
+            if not quill_id:
+                return render_template('pages/login.html', error=['Invalid token returned by registration 1'])
+
+            if User.query.filter_by(quill_id=quill_id).count() == 0:
+                user = User(quill_id, request.form['email'], r['user']['admin'])
+                db.session.add(user)
+                db.session.commit()
+
+            response = app.make_response(redirect('/inventory'))
+            response.set_cookie('jwt', r['token'])
+            return response
+        if request.form['hackathon'] == 'sh':
             url = urljoin(config.QUILL_URL2, '/auth/login')
             r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
             try:
@@ -50,33 +65,8 @@ def login_handler():
                 return render_template('pages/login.html', error=[str(e)])
 
             if 'message' in r:
-                # User not in QUILL2
-                url = urljoin(config.QUILL_URL3, '/auth/login')
-                r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
-                try:
-                    r = json.loads(r.text)
-                except ValueError as e:
-                    return render_template('pages/login.html', error=[str(e)])
+                return render_template('pages/login.html', error=[r['message']])
 
-                if 'message' in r:
-                    # User not in QUILL3 (i.e. not in any QUILL)
-                    return render_template('pages/login.html', error=[r['message']])
-
-                # User in QUILL3
-                quill_id = verify_token3(r['token'])
-                if not quill_id:
-                    return render_template('pages/login.html', error=['Invalid token returned by registration 3'])
-
-                if User.query.filter_by(quill_id=quill_id).count() == 0:
-                    user = User(quill_id, request.form['email'], r['user']['admin'])
-                    db.session.add(user)
-                    db.session.commit()
-
-                response = app.make_response(redirect('/inventory'))
-                response.set_cookie('jwt', r['token'])
-                return response
-
-            # User in QUILL2
             quill_id = verify_token2(r['token'])
             if not quill_id:
                 return render_template('pages/login.html', error=['Invalid token returned by registration 2'])
@@ -89,21 +79,29 @@ def login_handler():
             response = app.make_response(redirect('/inventory'))
             response.set_cookie('jwt', r['token'])
             return response
+        if request.form['hackathon'] == 'tech':
+            url = urljoin(config.QUILL_URL3, '/auth/login')
+            r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
+            try:
+                r = json.loads(r.text)
+            except ValueError as e:
+                return render_template('pages/login.html', error=[str(e)])
 
-            # return render_template('pages/login.html', error=[r['message']])
+            if 'message' in r:
+                return render_template('pages/login.html', error=[r['message']])
 
-        quill_id = verify_token(r['token'])
-        if not quill_id:
-            return render_template('pages/login.html', error=['Invalid token returned by registration 1'])
+            quill_id = verify_token3(r['token'])
+            if not quill_id:
+                return render_template('pages/login.html', error=['Invalid token returned by registration 3'])
 
-        if User.query.filter_by(quill_id=quill_id).count() == 0:
-            user = User(quill_id, request.form['email'], r['user']['admin'])
-            db.session.add(user)
-            db.session.commit()
+            if User.query.filter_by(quill_id=quill_id).count() == 0:
+                user = User(quill_id, request.form['email'], r['user']['admin'])
+                db.session.add(user)
+                db.session.commit()
 
-        response = app.make_response(redirect('/inventory'))
-        response.set_cookie('jwt', r['token'])
-        return response
+            response = app.make_response(redirect('/inventory'))
+            response.set_cookie('jwt', r['token'])
+            return response
 
     errors = []
     for field, error in form.errors.items():
