@@ -2,6 +2,8 @@ from hardwarecheckout import app
 from hardwarecheckout import config
 from hardwarecheckout.models.user import * 
 from hardwarecheckout.utils import verify_token
+from hardwarecheckout.utils import verify_token2
+from hardwarecheckout.utils import verify_token3
 import requests
 import datetime
 import json
@@ -39,7 +41,46 @@ def login_handler():
             return render_template('pages/login.html', error=[str(e)])
         
         if 'message' in r:
-            return render_template('pages/login.html', error=[r['message']])
+            # User not in QUILL1
+            url = urljoin(config.QUILL_URL2, '/auth/login')
+            r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
+            try:
+                r = json.loads(r.text)
+            except ValueError as e:
+                return render_template('pages/login.html', error=[str(e)])
+
+            if 'message' in r:
+                # User not in QUILL2
+                url = urljoin(config.QUILL_URL3, '/auth/login')
+                r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
+                try:
+                    r = json.loads(r.text)
+                except ValueError as e:
+                    return render_template('pages/login.html', error=[str(e)])
+
+                if 'message' in r:
+                    # User not in QUILL3 (i.e. not in any QUILL)
+                    return render_template('pages/login.html', error=[r['message']])
+
+                # User in QUILL3
+                quill_id = verify_token3(r['token'])
+                if not quill_id:
+                    return render_template('pages/login.html', error=['Invalid token returned by registration'])
+
+                response = app.make_response(redirect('/inventory'))
+                response.set_cookie('jwt', r['token'])
+                return response
+
+            # User in QUILL2
+            quill_id = verify_token2(r['token'])
+            if not quill_id:
+                return render_template('pages/login.html', error=['Invalid token returned by registration'])
+
+            response = app.make_response(redirect('/inventory'))
+            response.set_cookie('jwt', r['token'])
+            return response
+
+            # return render_template('pages/login.html', error=[r['message']])
 
         quill_id = verify_token(r['token'])
         if not quill_id:
