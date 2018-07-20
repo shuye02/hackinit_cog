@@ -8,13 +8,17 @@ import os
 # Postgres SQL Connection String.
 # Note: This is the default env variable name
 # used for Heroku postgres deploys.
-DB_URI = os.environ['DATABASE_URL'] 
+DB_URI = os.environ['DATABASE_URL']
 
 # URL of Quill instance (for auth integration)
-QUILL_URL = os.environ['QUILL'] 
+QUILL_URL = os.environ['QUILL']
+QUILL_URL2 = os.environ['QUILL2']
+QUILL_URL3 = os.environ['QUILL3']
 
 # Random Secret for JWTs - must match Quill secret
 SECRET = os.environ['SECRET']
+SECRET2 = os.environ['SECRET2']
+SECRET3 = os.environ['SECRET3']
 
 
 ### The following variables may all be set using environment

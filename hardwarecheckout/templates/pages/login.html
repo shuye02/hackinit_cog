@@ -5,8 +5,23 @@
 <div class="ui middle aligned center aligned grid">
     <div id="login-wrapper" class="ui segment column">
         <h2 class="ui header"> {{ config["HACKATHON_NAME"] }} Hardware </h2>
-        <span>请用您的 <a href="{{ config["QUILL_URL"] }}">{{ config["QUILL_URL_READABLE"] }}</a> 登录 </span>
+        <!-- <span>请用您的 <a href="{{ config["QUILL_URL"] }}">{{ config["QUILL_URL_READABLE"] }}</a> 登录 </span> -->
         <form id="login-form" class="ui form" action='/login' method='POST'>
+            <div class="inline fields">
+                <label>组别：</label>
+                <div class="ui radio checkbox">
+                    <input type="radio" name="hackathon" value="init">
+                    <label>Hack.init()</label>
+                </div>
+                <div class="ui radio checkbox">
+                    <input type="radio" name="hackathon" value="sh">
+                    <label>HackShanghai</label>
+                </div>
+                <div class="ui radio checkbox">
+                    <input type="radio" name="hackathon" value="tech">
+                    <label>ShanghaiTech</label>
+                </div>
+            </div>
             <div class="field">
                 <label>电子邮件</label>
                 <input type="text" name="email" placeholder="alyssap@hacker.org" autofocus>
