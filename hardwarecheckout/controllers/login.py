@@ -1,6 +1,6 @@
 from hardwarecheckout import app
 from hardwarecheckout import config
-from hardwarecheckout.models.user import * 
+from hardwarecheckout.models.user import *
 from hardwarecheckout.utils import verify_token
 from hardwarecheckout.utils import verify_token2
 from hardwarecheckout.utils import verify_token3
@@ -25,7 +25,7 @@ def login_page():
             return redirect('/inventory')
         except Exception as e:
             pass
-        
+
     return render_template('pages/login.html')
 
 @app.route('/login', methods=['POST'])
@@ -35,11 +35,11 @@ def login_handler():
     if form.validate():
         url = urljoin(config.QUILL_URL, '/auth/login')
         r = requests.post(url, data={'email':request.form['email'], 'password':request.form['password']})
-        try: 
+        try:
             r = json.loads(r.text)
         except ValueError as e:
             return render_template('pages/login.html', error=[str(e)])
-        
+
         if 'message' in r:
             # User not in QUILL1
             url = urljoin(config.QUILL_URL2, '/auth/login')
@@ -65,7 +65,12 @@ def login_handler():
                 # User in QUILL3
                 quill_id = verify_token3(r['token'])
                 if not quill_id:
-                    return render_template('pages/login.html', error=['Invalid token returned by registration'])
+                    return render_template('pages/login.html', error=['Invalid token returned by registration 3'])
+
+                if User.query.filter_by(quill_id=quill_id).count() == 0:
+                    user = User(quill_id, request.form['email'], r['user']['admin'])
+                    db.session.add(user)
+                    db.session.commit()
 
                 response = app.make_response(redirect('/inventory'))
                 response.set_cookie('jwt', r['token'])
@@ -74,7 +79,12 @@ def login_handler():
             # User in QUILL2
             quill_id = verify_token2(r['token'])
             if not quill_id:
-                return render_template('pages/login.html', error=['Invalid token returned by registration'])
+                return render_template('pages/login.html', error=['Invalid token returned by registration 2'])
+
+            if User.query.filter_by(quill_id=quill_id).count() == 0:
+                user = User(quill_id, request.form['email'], r['user']['admin'])
+                db.session.add(user)
+                db.session.commit()
 
             response = app.make_response(redirect('/inventory'))
             response.set_cookie('jwt', r['token'])
@@ -84,9 +94,9 @@ def login_handler():
 
         quill_id = verify_token(r['token'])
         if not quill_id:
-            return render_template('pages/login.html', error=['Invalid token returned by registration'])
-        
-        if User.query.filter_by(quill_id=quill_id).count() == 0: 
+            return render_template('pages/login.html', error=['Invalid token returned by registration 1'])
+
+        if User.query.filter_by(quill_id=quill_id).count() == 0:
             user = User(quill_id, request.form['email'], r['user']['admin'])
             db.session.add(user)
             db.session.commit()
@@ -94,7 +104,7 @@ def login_handler():
         response = app.make_response(redirect('/inventory'))
         response.set_cookie('jwt', r['token'])
         return response
-    
+
     errors = []
     for field, error in form.errors.items():
         errors.append(field + ": " + "\n".join(error) + "\n")
