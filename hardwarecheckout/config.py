@@ -41,7 +41,7 @@ FORCE_SSL = False
 
 ## Metadata ##
 
-HACKATHON_NAME = "Hack.init()"
+HACKATHON_NAME = "THE Hack"
 
 ## Event logistical settings ##
 
